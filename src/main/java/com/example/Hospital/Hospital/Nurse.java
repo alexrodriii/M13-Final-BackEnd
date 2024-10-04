@@ -1,19 +1,25 @@
 package com.example.Hospital.Hospital;
 
 public class Nurse {
+
+	private int idNurse;
 	private String name;
 	private String password;
 	private int age;
 	private String speciality;
-	private int idNurse;
 	private  static int totalNurse;
 
-	public Nurse(String name, String password,int edad, String profesionalidad, int idNurse) {
+	public Nurse(String name, String password,int age, String speciality) {
+    this.idNurse = totalNurse + 1;
 		this.name = name;
 		this.password = password;
-		this.age=edad;
-		this.speciality=profesionalidad;
-		this.idNurse=idNurse;
+		this.age=age;
+		this.speciality=speciality;
+  }
+
+	public void setSpeciality(String speciality) {
+		this.speciality = speciality;
+
 	}
 
 	public int getAge() {
@@ -28,16 +34,15 @@ public class Nurse {
 		return speciality;
 	}
 
-	public void setSpeciality(String speciality) {
-		this.speciality = speciality;
-	}
-
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
+  }
+	public int getIdNurse() {
+		return idNurse;
 	}
 
 	public String getName() {
