@@ -1,6 +1,11 @@
 package com.example.Hospital.Hospital;
 
 import java.util.ArrayList;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import org.springframework.boot.SpringApplication;
@@ -26,11 +31,11 @@ public class NurseController {
 
 	public NurseController() {
 		super();
-		nurses.add(new Nurse("Pedro", "Pass0", 25, "Enfermero"));
-		nurses.add(new Nurse("Antonio", "Pass1", 38, "Cardiologia"));
-		nurses.add(new Nurse("Alexandra", "Pass2", 40, "Cardiologia"));
-		nurses.add(new Nurse("Carla", "Pass3", 48, "Laboratorio"));
-		nurses.add(new Nurse("Jhon", "Pass4", 36, "Dermatologo"));
+		nurses.add(new Nurse("Pedro",25, "Pass0", "Enfermero"));
+		nurses.add(new Nurse("Antonio",38, "Pass1", "Cardiologia"));
+		nurses.add(new Nurse("Alexandra",40, "Pass2","Cardiologia"));
+		nurses.add(new Nurse("Carla",48, "Pass3", "Laboratorio"));
+		nurses.add(new Nurse("Jhon", 36, "Pass4", "Dermatologo"));
 	}
 
 	@PostMapping("/login")
@@ -43,6 +48,20 @@ public class NurseController {
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
 	}
+  
+  @GetMapping("/nurses")
+	public ArrayList <Nurse> getAll(){
+	
+	   	    for(int i =0; i < nurses.size();i++) {
+			    System.out.println(nurses.get(i));
+				
+	   	    
+	 }
+			return nurses;
+			
+}
+
+	
   	// The method
 	@GetMapping("/name/{name}")
 	public ResponseEntity<Nurse> findByName(@PathVariable  String name) {
@@ -54,5 +73,6 @@ public class NurseController {
 		}
 		return ResponseEntity.notFound().build();
 	}
+
 
 }
