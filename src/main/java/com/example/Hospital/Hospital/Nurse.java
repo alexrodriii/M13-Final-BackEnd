@@ -9,13 +9,14 @@ public class Nurse {
 	private int idNurse;
 	private static int totalNurse;
 
-	public Nurse(String name, int age, String password, String speciality ) {
+	public Nurse(String name, int age, String password, String speciality) {
 
 		this.name = name;
 		this.age = age;
 		this.password = password;
 		this.speciality = speciality;
-		this.idNurse = totalNurse+1;
+		this.idNurse = totalNurse + 1;
+		totalNurse++;
 	}
 
 	public String getName() {
@@ -24,7 +25,7 @@ public class Nurse {
 
 	public void setName(String name) {
 		this.name = name;
-  }
+	}
 
 	public int getAge() {
 		return age;
@@ -34,7 +35,6 @@ public class Nurse {
 		this.age = age;
 	}
 
-
 	public String getPassword() {
 		return password;
 	}
@@ -42,7 +42,6 @@ public class Nurse {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 
 	public String getSpeciality() {
 		return speciality;
@@ -52,20 +51,15 @@ public class Nurse {
 		this.speciality = speciality;
 	}
 
-
 	public int getIdNurse() {
 		return idNurse;
 	}
 
-
 	@Override
 	public String toString() {
 		return "Nurse{" + "Name='" + name + '\'' + ", Age=" + age + '\'' + ", idNurse='" + idNurse + '\''
-				+ ", speciality='" + speciality + '\'' + ", password=" + password + '}';
-	
+				+ ", speciality='" + speciality + '\'' + '}';
+
+	}
 
 }
-
-
-}
-
