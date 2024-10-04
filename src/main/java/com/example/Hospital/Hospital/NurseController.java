@@ -1,26 +1,55 @@
 package com.example.Hospital.Hospital;
+
 import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-
-
-@SpringBootApplication
 @RestController
+@RequestMapping("/nurse")
 public class NurseController {
-	 
-	   ArrayList<Nurse> nurses = new ArrayList<>();
-	   public NurseController() {
-		   
-      nurses.add(new Nurse("Alex Rodriguez", 19, "alex19","Oftalmologia" ));
-       nurses.add(new Nurse("Dafne Ramirez", 20,"dafne20","Psicologia" ));
-        nurses.add(new Nurse("Noemi Saladie", 22,"noemi22","Cirugía"));
-	   }
 
+	private ArrayList<Nurse> nurses = new ArrayList<Nurse>();
 
-@GetMapping("/nurses")
+	public NurseController() {
+		super();
+		nurses.add(new Nurse("Pedro",25, "Pass0", "Enfermero"));
+		nurses.add(new Nurse("Antonio",38, "Pass1", "Cardiologia"));
+		nurses.add(new Nurse("Alexandra",40, "Pass2","Cardiologia"));
+		nurses.add(new Nurse("Carla",48, "Pass3", "Laboratorio"));
+		nurses.add(new Nurse("Jhon", 36, "Pass4", "Dermatologo"));
+	}
+
+	@PostMapping("/login")
+	private @ResponseBody ResponseEntity<Boolean> login(@RequestParam String name, @RequestParam String password) {
+		// @ResponseBody Get value from body request
+		for (Nurse nurse : nurses) {
+			if (name.equalsIgnoreCase(nurse.getName()) && password.equals(nurse.getPassword())) {
+				return ResponseEntity.ok(true);
+			}
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+	}
+  
+  @GetMapping("/nurses")
 	public ArrayList <Nurse> getAll(){
 	
 	   	    for(int i =0; i < nurses.size();i++) {
@@ -33,5 +62,17 @@ public class NurseController {
 }
 
 	
-	
+  	// The method
+	@GetMapping("/name/{name}")
+	public ResponseEntity<Nurse> findByName(@PathVariable  String name) {
+		for (Nurse nurse : nurses) {
+			if (nurse.getName().equals(name)) {
+				return ResponseEntity.ok(nurse);
+				
+			}
+		}
+		return ResponseEntity.notFound().build();
+	}
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.Hospital.Hospital;
 
 public class Nurse {
+
 	private String name;
 	private int age;
 	private String password;
@@ -23,7 +24,7 @@ public class Nurse {
 
 	public void setName(String name) {
 		this.name = name;
-	}
+  }
 
 	public int getAge() {
 		return age;
@@ -33,6 +34,7 @@ public class Nurse {
 		this.age = age;
 	}
 
+
 	public String getPassword() {
 		return password;
 	}
@@ -41,6 +43,7 @@ public class Nurse {
 		this.password = password;
 	}
 
+
 	public String getSpeciality() {
 		return speciality;
 	}
@@ -48,6 +51,7 @@ public class Nurse {
 	public void setSpeciality(String speciality) {
 		this.speciality = speciality;
 	}
+
 
 	public int getIdNurse() {
 		return idNurse;
@@ -58,6 +62,10 @@ public class Nurse {
 	public String toString() {
 		return "Nurse{" + "Name='" + name + '\'' + ", Age=" + age + '\'' + ", idNurse='" + idNurse + '\''
 				+ ", speciality='" + speciality + '\'' + ", password=" + password + '}';
-	}
+	
 
 }
+
+
+}
+
