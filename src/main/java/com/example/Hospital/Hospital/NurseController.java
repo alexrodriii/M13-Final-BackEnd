@@ -50,7 +50,7 @@ public class NurseController {
 	@GetMapping("/name/{name}")
 	public ResponseEntity<Nurse> findByName(@PathVariable String name) {
 		for (Nurse nurse : nurses) {
-			if (nurse.getName().equals(name)) {
+			if (nurse.getName().equalsIgnoreCase(name)) {
 				return ResponseEntity.ok(nurse);
 
 			}
