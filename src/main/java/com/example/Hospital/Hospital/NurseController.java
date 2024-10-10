@@ -38,11 +38,9 @@ public class NurseController {
 	}
 
 	@GetMapping("/nurses")
-	public ArrayList<Nurse> getAll() {
-		for (int i = 0; i < nurses.size(); i++) {
-			System.out.println(nurses.get(i));
-		}
-		return nurses;
+	public ResponseEntity<ArrayList<Nurse>> getAll() {
+
+		return ResponseEntity.ok(nurses);
 
 	}
 
