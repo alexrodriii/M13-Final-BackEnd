@@ -1,22 +1,26 @@
 package com.example.Hospital.Hospital;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Nurse {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer idNurse;
 
 	private String name;
-	private int age;
 	private String password;
+	private int age;
 	private String speciality;
-	private int idNurse;
-	private static int totalNurse;
 
 	public Nurse(String name, int age, String password, String speciality) {
-
 		this.name = name;
 		this.age = age;
 		this.password = password;
 		this.speciality = speciality;
-		this.idNurse = totalNurse + 1;
-		totalNurse++;
 	}
 
 	public String getName() {
@@ -51,7 +55,7 @@ public class Nurse {
 		this.speciality = speciality;
 	}
 
-	public int getIdNurse() {
+	public Integer getIdNurse() {
 		return idNurse;
 	}
 
