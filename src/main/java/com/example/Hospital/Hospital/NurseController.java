@@ -19,11 +19,6 @@ public class NurseController {
 
 	public NurseController() {
 		super();
-		nurses.add(new Nurse("Pedro", 25, "Pass0", "Enfermero"));
-		nurses.add(new Nurse("Antonio", 38, "Pass1", "Cardiologia"));
-		nurses.add(new Nurse("Alexandra", 40, "Pass2", "Cardiologia"));
-		nurses.add(new Nurse("Carla", 48, "Pass3", "Laboratorio"));
-		nurses.add(new Nurse("Jhon", 36, "Pass4", "Dermatologo"));
 	}
 
 	@PostMapping("/login")
