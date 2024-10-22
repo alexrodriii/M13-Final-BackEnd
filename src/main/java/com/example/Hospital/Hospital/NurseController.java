@@ -23,6 +23,8 @@ public class NurseController {
 	private NurseRepository nurseRepository;
 
 	private ArrayList<Nurse> nurses = new ArrayList<Nurse>();
+	@Autowired
+	private NurseRepository nurseRepository;
 
 	public NurseController() {
 		super();
@@ -31,12 +33,18 @@ public class NurseController {
 	@PostMapping("/login")
 	private @ResponseBody ResponseEntity<Boolean> login(@RequestParam String name, @RequestParam String password) {
 		// @ResponseBody Get value from body request
-		for (Nurse nurse : nurses) {
-			if (name.equalsIgnoreCase(nurse.getName()) && password.equals(nurse.getPassword())) {
+		Optional<Nurse> nurseLogin = nurseRepository.findByNameAndPassword(name, password);
+
+		// Checks if a nurse with the given credentials exists in the database.
+		if (nurseLogin.isPresent()) {
+			// Compares the password entered by the user with the password in the database
+			if (nurseLogin.get().getPassword().equals(password)) {
 				return ResponseEntity.ok(true);
 			}
+
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+
 	}
 
 	@GetMapping("/nurses")

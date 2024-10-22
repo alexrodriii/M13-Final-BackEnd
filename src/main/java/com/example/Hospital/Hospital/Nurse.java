@@ -22,13 +22,10 @@ public class Nurse {
 		this.password = password;
 		this.speciality = speciality;
 	}
-
 	
 	public Nurse() {
 		
 	}
-
-
 
 	public String getName() {
 		return name;
