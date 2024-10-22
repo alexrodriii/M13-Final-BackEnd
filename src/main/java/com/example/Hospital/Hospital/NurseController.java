@@ -3,10 +3,12 @@ package com.example.Hospital.Hospital;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,7 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RestController
 @RequestMapping("/nurse")
 public class NurseController {
-
+	@Autowired
+	private NurseRepository nurseRepository;
 	private ArrayList<Nurse> nurses = new ArrayList<Nurse>();
 
 	public NurseController() {
@@ -33,9 +36,9 @@ public class NurseController {
 	}
 
 	@GetMapping("/nurses")
-	public ResponseEntity<ArrayList<Nurse>> getAll() {
+	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
 
-		return ResponseEntity.ok(nurses);
+		return ResponseEntity.ok((nurseRepository.findAll()));
 
 	}
 
@@ -50,5 +53,4 @@ public class NurseController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-
 }
