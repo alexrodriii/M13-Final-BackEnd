@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +22,6 @@ public class NurseController {
 	private NurseRepository nurseRepository;
 
 	private ArrayList<Nurse> nurses = new ArrayList<Nurse>();
-	@Autowired
-	private NurseRepository nurseRepository;
 
 	public NurseController() {
 		super();
@@ -56,20 +53,14 @@ public class NurseController {
 
 	// The method
 	@GetMapping("/name/{name}")
-	public @ResponseBody ResponseEntity<Optional<Nurse>> findByName(@PathVariable ("name")String name) {
-			Optional<Nurse> nurse = nurseRepository.findByNameIgnoringCase(name);
-			if(nurse.isPresent()) {
-				return ResponseEntity.ok(nurse);
-			}else{
-				return ResponseEntity.notFound().build();
-			}
+	public @ResponseBody ResponseEntity<Optional<Nurse>> findByName(@PathVariable("name") String name) {
+		Optional<Nurse> nurse = nurseRepository.findByNameIgnoringCase(name);
+		if (nurse.isPresent()) {
+			return ResponseEntity.ok(nurse);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 
 	}
 
 }
-
-	
-	
-
-
-
