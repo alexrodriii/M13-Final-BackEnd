@@ -23,6 +23,9 @@ public class Nurse {
 		this.speciality = speciality;
 	}
 
+	public Nurse() {
+	}
+
 	public String getName() {
 		return name;
 	}
