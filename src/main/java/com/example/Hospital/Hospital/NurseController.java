@@ -1,8 +1,11 @@
 package com.example.Hospital.Hospital;
 
 import java.util.ArrayList;
+import java.util.Optional;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class NurseController {
 	@Autowired
 	private NurseRepository nurseRepository;
+
 	private ArrayList<Nurse> nurses = new ArrayList<Nurse>();
 
 	public NurseController() {
@@ -44,13 +48,20 @@ public class NurseController {
 
 	// The method
 	@GetMapping("/name/{name}")
-	public ResponseEntity<Nurse> findByName(@PathVariable String name) {
-		for (Nurse nurse : nurses) {
-			if (nurse.getName().equalsIgnoreCase(name)) {
+	public @ResponseBody ResponseEntity<Optional<Nurse>> findByName(@PathVariable ("name")String name) {
+			Optional<Nurse> nurse = nurseRepository.findByNameIgnoringCase(name);
+			if(nurse.isPresent()) {
 				return ResponseEntity.ok(nurse);
-
+			}else{
+				return ResponseEntity.notFound().build();
 			}
-		}
-		return ResponseEntity.notFound().build();
+
 	}
+
 }
+
+	
+	
+
+
+
