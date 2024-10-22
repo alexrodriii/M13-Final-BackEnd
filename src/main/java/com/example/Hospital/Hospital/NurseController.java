@@ -40,9 +40,9 @@ public class NurseController {
 	}
 
 	@GetMapping("/nurses")
-	public ResponseEntity<ArrayList<Nurse>> getAll() {
+	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
 
-		return ResponseEntity.ok(nurses);
+		return ResponseEntity.ok((nurseRepository.findAll()));
 
 	}
 
@@ -57,7 +57,11 @@ public class NurseController {
 			}
 
 	}
-	}
+
+}
+
 	
+	
+
 
 
