@@ -3,6 +3,7 @@ package com.example.Hospital.Hospital;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,6 +62,18 @@ public class NurseController {
 			return ResponseEntity.notFound().build();
 		}
 
+	}
+
+	@DeleteMapping("/deleteNurse/{id}")
+	public @ResponseBody ResponseEntity<Boolean> deleteNurseById(@PathVariable("id") int id) {
+		// Check if the id of a nurse exist
+		if (nurseRepository.existsById(id)) {
+			// Delete a specific nurse
+			nurseRepository.deleteById(id);
+			return ResponseEntity.ok(true);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+		}
 	}
 
 }
