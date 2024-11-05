@@ -63,6 +63,15 @@ public class NurseController {
 		}
 
 	}
+	@GetMapping("/{id}")
+	public @ResponseBody ResponseEntity<Optional<Nurse>> finById(@PathVariable("id") int id) {
+		Optional<Nurse> nurse = nurseRepository.findById(id);
+		if (nurse.isPresent()) {
+			return ResponseEntity.ok(nurse);
+		} else {
+			return ResponseEntity.notFound().build();
+    }
+	}
 
 	@DeleteMapping("/deleteNurse/{id}")
 	public @ResponseBody ResponseEntity<Boolean> deleteNurseById(@PathVariable("id") int id) {
@@ -75,5 +84,6 @@ public class NurseController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
 		}
 	}
+
 
 }
