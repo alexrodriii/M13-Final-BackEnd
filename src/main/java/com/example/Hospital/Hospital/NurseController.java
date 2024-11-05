@@ -45,7 +45,7 @@ public class NurseController {
 
 	}
 
-	@GetMapping("/nurses")
+	@GetMapping
 	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
 
 		return ResponseEntity.ok((nurseRepository.findAll()));
