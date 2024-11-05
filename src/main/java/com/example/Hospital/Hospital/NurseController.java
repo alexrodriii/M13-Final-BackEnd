@@ -64,7 +64,7 @@ public class NurseController {
 
 	}
 
-	@DeleteMapping("/deleteNurse/{id}")
+	@DeleteMapping("/{id}")
 	public @ResponseBody ResponseEntity<Boolean> deleteNurseById(@PathVariable("id") int id) {
 		// Check if the id of a nurse exist
 		if (nurseRepository.existsById(id)) {
