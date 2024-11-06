@@ -3,18 +3,10 @@ package com.example.Hospital.Hospital;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @RestController
 @RequestMapping("/nurse")
@@ -85,5 +77,27 @@ public class NurseController {
 		}
 	}
 
+
+	@PutMapping("/{id}")
+	public @ResponseBody ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse nurseUpdate) {
+		Optional<Nurse> nurse = nurseRepository.findById(id);
+		// Check if the id of nurse exist in the database
+		if (nurse.isPresent()) {
+			try {
+				// Create a new nurse that will have the new data to be updated
+				Nurse updatedNurse = new Nurse(id, nurseUpdate.getName(), nurseUpdate.getAge(),
+						nurseUpdate.getPassword(), nurseUpdate.getSpeciality());
+
+				nurseRepository.save(updatedNurse);
+				return ResponseEntity.ok(updatedNurse);
+			} catch (Exception e) {
+				// Catch any exception and return 400
+				return ResponseEntity.badRequest().build();
+			}
+		} else {
+			// If the id pass by the user not exist return 404
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 }
