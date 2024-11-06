@@ -3,8 +3,6 @@ package com.example.Hospital.Hospital;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,7 @@ public class NurseController {
 
 	}
 
-	@GetMapping("/nurses")
+	@GetMapping
 	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
 
 		return ResponseEntity.ok((nurseRepository.findAll()));
@@ -57,6 +55,28 @@ public class NurseController {
 		}
 
 	}
+	@GetMapping("/{id}")
+	public @ResponseBody ResponseEntity<Optional<Nurse>> finById(@PathVariable("id") int id) {
+		Optional<Nurse> nurse = nurseRepository.findById(id);
+		if (nurse.isPresent()) {
+			return ResponseEntity.ok(nurse);
+		} else {
+			return ResponseEntity.notFound().build();
+    }
+	}
+
+	@DeleteMapping("/{id}")
+	public @ResponseBody ResponseEntity<Boolean> deleteNurseById(@PathVariable("id") int id) {
+		// Check if the id of a nurse exist
+		if (nurseRepository.existsById(id)) {
+			// Delete a specific nurse
+			nurseRepository.deleteById(id);
+			return ResponseEntity.ok(true);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+		}
+	}
+
 
 	@PutMapping("/{id}")
 	public @ResponseBody ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse nurseUpdate) {
