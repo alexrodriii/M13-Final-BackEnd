@@ -23,6 +23,15 @@ public class Nurse {
 		this.speciality = speciality;
 	}
 	
+	// Update Nurse
+	public Nurse(int id, String name, int age, String password, String speciality) {
+		this.idNurse = id;
+		this.name = name;
+		this.age = age;
+		this.password = password;
+		this.speciality = speciality;
+	}
+	
 	public Nurse() {
 		
 	}
