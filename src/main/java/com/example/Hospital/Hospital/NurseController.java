@@ -63,7 +63,7 @@ public class NurseController {
 			return ResponseEntity.ok(nurse);
 		} else {
 			return ResponseEntity.notFound().build();
-    }
+		}
 	}
 
 	@DeleteMapping("/{id}")
@@ -78,9 +78,15 @@ public class NurseController {
 		}
 	}
 
-
 	@PutMapping("/{id}")
 	public @ResponseBody ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse nurseUpdate) {
+		// Validate password format using regex
+		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
+		if (!Pattern.matches(passwordRegex, nurseUpdate.getPassword())) {
+			// Return 400 if password is invalid
+			return ResponseEntity.badRequest().build(); 
+		}
+
 		Optional<Nurse> nurse = nurseRepository.findById(id);
 		// Check if the id of nurse exist in the database
 		if (nurse.isPresent()) {
@@ -99,6 +105,7 @@ public class NurseController {
 			// If the id pass by the user not exist return 404
 			return ResponseEntity.notFound().build();
 		}
+
 	}
 
 	@PostMapping()
