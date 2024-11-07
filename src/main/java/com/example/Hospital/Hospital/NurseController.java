@@ -2,6 +2,7 @@ package com.example.Hospital.Hospital;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -100,4 +101,26 @@ public class NurseController {
 		}
 	}
 
+	@PostMapping()
+	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestParam String name, @RequestParam String password,
+			@RequestParam int age, @RequestParam String speciality) {
+		String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
+		if (Pattern.matches(regex, password)) {
+
+			try {
+				nurseRepository.findAll();
+				Nurse nurse = new Nurse();
+				nurse.setName(name);
+				nurse.setPassword(password);
+				nurse.setAge(0);
+				nurse.setSpeciality(speciality);
+				return ResponseEntity.ok(nurse);
+			} catch (Exception e) {
+				return ResponseEntity.badRequest().build();
+			}
+		} else {
+			return ResponseEntity.badRequest().build();
+
+		}
+	}
 }
