@@ -107,23 +107,24 @@ public class NurseController {
 	@PostMapping()
 	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestParam String name, @RequestParam String password,
 			@RequestParam int age, @RequestParam String speciality) {
-		String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
-		if (Pattern.matches(regex, password)) {
-
-			try {
-				nurseRepository.findAll();
-				Nurse nurse = new Nurse();
-				nurse.setName(name);
-				nurse.setPassword(password);
-				nurse.setAge(0);
-				nurse.setSpeciality(speciality);
-				return ResponseEntity.ok(nurse);
-			} catch (Exception e) {
-				return ResponseEntity.badRequest().build();
-			}
-		} else {
+		// Validate password format using regex
+		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
+		if (!Pattern.matches(passwordRegex, password)) {
+			// Return 400 if password is invalid
 			return ResponseEntity.badRequest().build();
-
+		}
+		try {
+			Nurse nurse = new Nurse();
+			nurse.setName(name);
+			nurse.setPassword(password);
+			nurse.setAge(age);
+			nurse.setSpeciality(speciality);
+			// Save the data of the new nurse into database
+			Nurse createdNurse = nurseRepository.save(nurse);
+			return ResponseEntity.status(HttpStatus.CREATED).body(createdNurse);
+		} catch (Exception e) {
+			// Also return 400 if data saving fails
+			return ResponseEntity.badRequest().build();
 		}
 	}
 }
