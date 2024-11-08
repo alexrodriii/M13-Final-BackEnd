@@ -52,6 +52,7 @@ public class NurseController {
 		}
 
 	}
+
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Optional<Nurse>> finById(@PathVariable("id") int id) {
 		Optional<Nurse> nurse = nurseRepository.findById(id);
@@ -78,21 +79,33 @@ public class NurseController {
 	public @ResponseBody ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse nurseUpdate) {
 		// Validate password format using regex
 		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
-		if (!Pattern.matches(passwordRegex, nurseUpdate.getPassword())) {
+		if (nurseUpdate.getPassword() != null && !Pattern.matches(passwordRegex, nurseUpdate.getPassword())) {
 			// Return 400 if password is invalid
-			return ResponseEntity.badRequest().build(); 
+			return ResponseEntity.badRequest().build();
 		}
 
 		Optional<Nurse> nurse = nurseRepository.findById(id);
 		// Check if the id of nurse exist in the database
 		if (nurse.isPresent()) {
-			try {
-				// Create a new nurse that will have the new data to be updated
-				Nurse updatedNurse = new Nurse(id, nurseUpdate.getName(), nurseUpdate.getAge(),
-						nurseUpdate.getPassword(), nurseUpdate.getSpeciality());
+			// Create a new nurse that will have the new data to be updated
+			Nurse existingNurse = nurse.get();
+			// Check if the user pass a name to update the data
+			if (nurseUpdate.getName() != null) {
+				existingNurse.setName(nurseUpdate.getName());
+			}
+			if (nurseUpdate.getPassword() != null) {
+				existingNurse.setPassword(nurseUpdate.getPassword());
+			}
+			if (nurseUpdate.getAge() >= 18) {
+				existingNurse.setAge(nurseUpdate.getAge());
+			}
+			if (nurseUpdate.getSpeciality() != null) {
+				existingNurse.setSpeciality(nurseUpdate.getSpeciality());
+			}
 
-				nurseRepository.save(updatedNurse);
-				return ResponseEntity.ok(updatedNurse);
+			try {
+				nurseRepository.save(existingNurse);
+				return ResponseEntity.ok(existingNurse);
 			} catch (Exception e) {
 				// Catch any exception and return 400
 				return ResponseEntity.badRequest().build();
