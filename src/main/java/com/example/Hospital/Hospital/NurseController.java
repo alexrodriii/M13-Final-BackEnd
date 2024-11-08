@@ -22,7 +22,7 @@ public class NurseController {
 	}
 
 	@PostMapping("/login")
-	private @ResponseBody ResponseEntity<Boolean> login(@RequestParam String name, @RequestParam String password) {
+	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String name, @RequestParam String password) {
 		// @ResponseBody Get value from body request
 		Optional<Nurse> nurseLogin = nurseRepository.findByNameAndPasswordCaseSensitive(name, password);
 
