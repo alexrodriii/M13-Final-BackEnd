@@ -1,0 +1,47 @@
+name: Java CI with Maven
+
+# Configura el pipeline para que se ejecute en cada push o pull request en la rama principal
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: Clona el repositorio en la máquina de GitHub Actions
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      # Paso 2: Configura Java 17 (o la versión que uses en el proyecto)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Paso 3: Configura el caché de dependencias de Maven para acelerar la construcción
+      - name: Cache Maven dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Paso 4: Compila el proyecto y ejecuta las pruebas
+      - name: Build and test with Maven
+        run: mvn clean verify -B
+
+      # Paso 5: Si el build falla, guarda los reportes de pruebas
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: target/surefire-reports/
