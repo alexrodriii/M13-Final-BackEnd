@@ -7,7 +7,7 @@ This project is a **Java Spring Boot** application designed to manage a hospital
 - Retrieve all nurses.
 - Search nurse by name or ID.
 - Add, update, and delete nurses.
-- Data validation for passwords and age.
+- Data validation for password.
 
 ## API Endpoints
 
