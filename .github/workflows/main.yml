@@ -1,13 +1,12 @@
 name: Java CI with Maven
 
-# Configura el pipeline para que se ejecute en cada push o pull request en la rama principal
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -38,10 +37,10 @@ jobs:
       - name: Build and test with Maven
         run: mvn clean verify -B
 
-      # Paso 5: Si el build falla, guarda los reportes de pruebas
+      # Paso 5: Si el build falla, guarda los reportes de pruebas usando upload-artifact v3
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3  # Cambiado a v3
         with:
           name: test-reports
           path: target/surefire-reports/
