@@ -66,9 +66,12 @@ public class NurseController {
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Optional<Nurse>> finById(@PathVariable("id") int id) {
 		Optional<Nurse> nurse = nurseRepository.findById(id);
+		//Check if the nurse exist
 		if (nurse.isPresent()) {
+			//If the nurse exists then he shows it to us
 			return ResponseEntity.ok(nurse);
 		} else {
+			//If the nurse doesn't exist it shows error
 			return ResponseEntity.notFound().build();
     }
 	}
