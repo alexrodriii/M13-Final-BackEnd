@@ -9,18 +9,43 @@ import jakarta.persistence.Id;
 public class Nurse {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idNurse;
+	private Integer id;
 
 	private String name;
+	private String surname;
+	private String age;
+	private String email;
 	private String password;
-	private int age;
 	private String speciality;
 
-	public Nurse(String name, int age, String password, String speciality) {
+	public Nurse(String name, String surname, String age, String email, String password, String speciality) {
+		super();
 		this.name = name;
+		this.surname = surname;
 		this.age = age;
+		this.email = email;
 		this.password = password;
 		this.speciality = speciality;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Integer getId() {
+		return id;
 	}
 
 	public Nurse() {
@@ -35,11 +60,11 @@ public class Nurse {
 		this.name = name;
 	}
 
-	public int getAge() {
+	public String getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(String age) {
 		this.age = age;
 	}
 
@@ -59,14 +84,10 @@ public class Nurse {
 		this.speciality = speciality;
 	}
 
-	public Integer getIdNurse() {
-		return idNurse;
-	}
-
 	@Override
 	public String toString() {
-		return "Nurse{" + "Name='" + name + '\'' + ", Age=" + age + '\'' + ", idNurse='" + idNurse + '\''
-				+ ", speciality='" + speciality + '\'' + '}';
+		return "Nurse{" + "Name='" + name + '\'' + ", Age=" + age + '\'' + ", id='" + id + '\'' + ", speciality='"
+				+ speciality + '\'' + '}';
 
 	}
 

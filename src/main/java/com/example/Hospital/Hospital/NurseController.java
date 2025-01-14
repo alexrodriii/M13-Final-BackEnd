@@ -1,5 +1,8 @@
 package com.example.Hospital.Hospital;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -15,16 +18,14 @@ public class NurseController {
 	@Autowired
 	private NurseRepository nurseRepository;
 
-	private ArrayList<Nurse> nurses = new ArrayList<Nurse>();
-
 	public NurseController() {
 		super();
 	}
 
 	@PostMapping("/login")
-	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String name, @RequestParam String password) {
+	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String email, @RequestParam String password) {
 		// @ResponseBody Get value from body request
-		Optional<Nurse> nurseLogin = nurseRepository.findByNameAndPasswordCaseSensitive(name, password);
+		Optional<Nurse> nurseLogin = nurseRepository.findByEmailAndPasswordCaseSensitive(email, password);
 
 		// Checks if a nurse with the given credentials exists in the database.
 		if (nurseLogin.isPresent()) {
@@ -56,12 +57,12 @@ public class NurseController {
 	@GetMapping("/{id}")
 	public @ResponseBody ResponseEntity<Optional<Nurse>> finById(@PathVariable("id") int id) {
 		Optional<Nurse> nurse = nurseRepository.findById(id);
-		//Check if the nurse exist
+		// Check if the nurse exist
 		if (nurse.isPresent()) {
-			//If the nurse exists then he shows it to us
+			// If the nurse exists then he shows it to us
 			return ResponseEntity.ok(nurse);
 		} else {
-			//If the nurse doesn't exist it shows error
+			// If the nurse doesn't exist it shows error
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -96,11 +97,25 @@ public class NurseController {
 			if (nurseUpdate.getName() != null) {
 				existingNurse.setName(nurseUpdate.getName());
 			}
+			if (nurseUpdate.getSurname() != null) {
+				existingNurse.setSurname(nurseUpdate.getSurname());
+			}
+			if (nurseUpdate.getEmail() != null) {
+				existingNurse.setEmail(nurseUpdate.getEmail());
+			}
 			if (nurseUpdate.getPassword() != null) {
 				existingNurse.setPassword(nurseUpdate.getPassword());
 			}
-			if (nurseUpdate.getAge() >= 18) {
-				existingNurse.setAge(nurseUpdate.getAge());
+			if (nurseUpdate.getAge() != null) {
+				try {
+					LocalDate birthDate = LocalDate.parse(nurseUpdate.getAge(),
+							DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+					if (LocalDate.now().getYear() - birthDate.getYear() >= 18) {
+						existingNurse.setAge(nurseUpdate.getAge());
+					}
+				} catch (DateTimeParseException e) {
+					return ResponseEntity.badRequest().build(); // Invalid date format
+				}
 			}
 			if (nurseUpdate.getSpeciality() != null) {
 				existingNurse.setSpeciality(nurseUpdate.getSpeciality());
@@ -121,20 +136,21 @@ public class NurseController {
 	}
 
 	@PostMapping()
-	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestParam String name, @RequestParam String password,
-			@RequestParam int age, @RequestParam String speciality) {
+	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestBody Nurse nurseCreate) {
 		// Validate password format using regex
 		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
-		if (!Pattern.matches(passwordRegex, password)) {
+		if (!Pattern.matches(passwordRegex, nurseCreate.getPassword())) {
 			// Return 400 if password is invalid
 			return ResponseEntity.badRequest().build();
 		}
 		try {
 			Nurse nurse = new Nurse();
-			nurse.setName(name);
-			nurse.setPassword(password);
-			nurse.setAge(age);
-			nurse.setSpeciality(speciality);
+			nurse.setName(nurseCreate.getName());
+			nurse.setSurname(nurseCreate.getSurname());
+			nurse.setEmail(nurseCreate.getEmail());
+			nurse.setAge(nurseCreate.getAge());
+			nurse.setPassword(nurseCreate.getPassword());
+			nurse.setSpeciality(nurseCreate.getSpeciality());
 			// Save the data of the new nurse into database
 			Nurse createdNurse = nurseRepository.save(nurse);
 			return ResponseEntity.status(HttpStatus.CREATED).body(createdNurse);
