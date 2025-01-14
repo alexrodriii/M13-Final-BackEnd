@@ -37,7 +37,7 @@ class NurseControllerTest {
 	void testLogin_Success() {
 		String name = "John";
 		String password = "Password123";
-		when(nurseRepository.findByNameAndPasswordCaseSensitive(name, password)).thenReturn(Optional.of(new Nurse()));
+		when(nurseRepository.findByEmailAndPasswordCaseSensitive(name, password)).thenReturn(Optional.of(new Nurse()));
 
 		ResponseEntity<Boolean> response = nurseController.login(name, password);
 
@@ -49,7 +49,7 @@ class NurseControllerTest {
 	void testLogin_Unauthorized() {
 		String name = "John";
 		String password = "WrongPassword";
-		when(nurseRepository.findByNameAndPasswordCaseSensitive(name, password)).thenReturn(Optional.empty());
+		when(nurseRepository.findByEmailAndPasswordCaseSensitive(name, password)).thenReturn(Optional.empty());
 
 		ResponseEntity<Boolean> response = nurseController.login(name, password);
 

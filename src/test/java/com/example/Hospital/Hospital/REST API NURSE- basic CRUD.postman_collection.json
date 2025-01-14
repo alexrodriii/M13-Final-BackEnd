@@ -132,8 +132,8 @@
 					"mode": "urlencoded",
 					"urlencoded": [
 						{
-							"key": "name",
-							"value": "sofia",
+							"key": "email",
+							"value": "s.bernal@gmail.com",
 							"type": "text"
 						},
 						{
@@ -179,29 +179,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "name",
-							"value": "New USer",
-							"type": "text"
-						},
-						{
-							"key": "age",
-							"value": "21",
-							"type": "text"
-						},
-						{
-							"key": "password",
-							"value": "NewUSer1",
-							"type": "text"
-						},
-						{
-							"key": "speciality",
-							"value": "New Nurse Speciality",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Alexandra\",\r\n    \"surname\":\"Mateo\",\r\n    \"email\":\"a.mateo@gmail.com\",\r\n    \"age\":\"29/05/1971\",\r\n    \"password\":\"AlexandraMateo1\",\r\n    \"speciality\": \"Perioperative\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "localhost:8080/nurse",
