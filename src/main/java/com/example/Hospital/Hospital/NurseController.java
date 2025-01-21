@@ -23,15 +23,16 @@ public class NurseController {
 	}
 
 	@PostMapping("/login")
-	public @ResponseBody ResponseEntity<Boolean> login(@RequestParam String email, @RequestParam String password) {
+	public @ResponseBody ResponseEntity<Optional<Nurse>> login(@RequestBody Nurse nurseLogin) {
 		// @ResponseBody Get value from body request
-		Optional<Nurse> nurseLogin = nurseRepository.findByEmailAndPasswordCaseSensitive(email, password);
+		Optional<Nurse> nurse = nurseRepository.findByEmailAndPasswordCaseSensitive(nurseLogin.getEmail(),
+				nurseLogin.getPassword());
 
 		// Checks if a nurse with the given credentials exists in the database.
-		if (nurseLogin.isPresent()) {
-			return ResponseEntity.ok(true);
+		if (nurse.isPresent()) {
+			return ResponseEntity.ok(nurse);
 		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(false);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
 	}
 

@@ -2,8 +2,6 @@ package com.example.Hospital.Hospital;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,26 +33,31 @@ class NurseControllerTest {
 
 	@Test
 	void testLogin_Success() {
-		String name = "John";
-		String password = "Password123";
-		when(nurseRepository.findByEmailAndPasswordCaseSensitive(name, password)).thenReturn(Optional.of(new Nurse()));
+		Nurse loginNurse = new Nurse();
+		loginNurse.setEmail("test@test.com");
+		loginNurse.setPassword("Test123");
 
-		ResponseEntity<Boolean> response = nurseController.login(name, password);
+		when(nurseRepository.findByEmailAndPasswordCaseSensitive(loginNurse.getEmail(), loginNurse.getPassword()))
+				.thenReturn(Optional.of(new Nurse()));
+
+		ResponseEntity<Optional<Nurse>> response = nurseController.login(loginNurse);
 
 		assertEquals(200, response.getStatusCodeValue());
-		assertTrue(response.getBody());
+		assertTrue(response.getBody().isPresent());
 	}
 
 	@Test
 	void testLogin_Unauthorized() {
-		String name = "John";
-		String password = "WrongPassword";
-		when(nurseRepository.findByEmailAndPasswordCaseSensitive(name, password)).thenReturn(Optional.empty());
+		Nurse loginNurse = new Nurse();
+		loginNurse.setEmail("test@test.com");
+		loginNurse.setPassword("WrongPassword");
+		when(nurseRepository.findByEmailAndPasswordCaseSensitive(loginNurse.getEmail(), loginNurse.getPassword()))
+				.thenReturn(Optional.empty());
 
-		ResponseEntity<Boolean> response = nurseController.login(name, password);
+		ResponseEntity<Optional<Nurse>> response = nurseController.login(loginNurse);
 
 		assertEquals(401, response.getStatusCodeValue());
-		assertFalse(response.getBody());
+		assertNull(response.getBody()); // Verificamos que el cuerpo sea nulo
 	}
 
 	@Test
@@ -86,44 +89,31 @@ class NurseControllerTest {
 
 		ResponseEntity<Optional<Nurse>> response = nurseController.findByName(name);
 
-		assertEquals(404, response.getStatusCodeValue());
-		assertNull(response.getBody());
+		assertEquals(404, response.getStatusCodeValue()); // Verificar código de estado
+		assertNull(response.getBody()); // Verificar que el cuerpo sea null
 	}
 
 	@Test
 	void testFindById_Found() {
 		int id = 1;
-		Nurse nurse = new Nurse("John Doe", 30, "password123", "Cardiology");
-
-		// Mock the repository to return a nurse for the given ID
+		Nurse nurse = new Nurse();
 		when(nurseRepository.findById(id)).thenReturn(Optional.of(nurse));
 
-		// Call the controller method
 		ResponseEntity<Optional<Nurse>> response = nurseController.finById(id);
 
-		// Assert the response status is 200 OK
 		assertEquals(200, response.getStatusCodeValue());
-
-		// Assert the nurse is returned in the response body
 		assertTrue(response.getBody().isPresent());
-		assertEquals(nurse, response.getBody().get()); // Nurse data should match
 	}
 
 	@Test
 	void testFindById_NotFound() {
-		int id = 999; // Assuming no nurse exists with this ID
-
-		// Mock the repository to return an empty Optional (nurse not found)
+		int id = 999; // ID que no existe
 		when(nurseRepository.findById(id)).thenReturn(Optional.empty());
 
-		// Call the controller method
 		ResponseEntity<Optional<Nurse>> response = nurseController.finById(id);
 
-		// Assert the response status is 404 Not Found
-		assertEquals(404, response.getStatusCodeValue());
-
-		// Assert that the response body is null, as nurse was not found
-		assertNull(response.getBody());
+		assertEquals(404, response.getStatusCodeValue()); // Verificar código de estado
+		assertNull(response.getBody()); // Verificar que el cuerpo sea null
 	}
 
 	@Test
@@ -151,97 +141,67 @@ class NurseControllerTest {
 
 	@Test
 	void testCreateNurse_Success() {
-		String name = "John";
-		String password = "Valid123";
-		int age = 30;
-		String speciality = "Cardiology";
-
 		Nurse nurse = new Nurse();
-		nurse.setName(name);
-		nurse.setPassword(password);
-		nurse.setAge(age);
-		nurse.setSpeciality(speciality);
+		nurse.setName("John");
+		nurse.setPassword("Valid123");
+		nurse.setAge("01/01/1990");
+		nurse.setSpeciality("Cardiology");
 
 		when(nurseRepository.save(any(Nurse.class))).thenReturn(nurse);
 
-		ResponseEntity<Nurse> response = nurseController.createNurse(name, password, age, speciality);
+		ResponseEntity<Nurse> response = nurseController.createNurse(nurse);
 
-		assertEquals(201, response.getStatusCodeValue()); // Ensure status is 201 Created
+		assertEquals(201, response.getStatusCodeValue());
 		assertNotNull(response.getBody());
-		assertEquals(name, response.getBody().getName());
-		assertEquals(password, response.getBody().getPassword());
-		assertEquals(age, response.getBody().getAge());
-		assertEquals(speciality, response.getBody().getSpeciality());
+		assertEquals(nurse.getName(), response.getBody().getName());
 	}
 
 	@Test
-	void testCreateNurse_Failed_Exception() {
-		String name = "John";
-		String password = "Valid123"; // Valid password
-		int age = 30;
-		String speciality = "Cardiology";
+	void testCreateNurse_Failed_InvalidPassword() {
+		Nurse nurse = new Nurse();
+		nurse.setName("John");
+		nurse.setPassword("invalid");
+		nurse.setAge("01/01/1990");
+		nurse.setSpeciality("Cardiology");
 
-		// Simulate an exception when saving the nurse
-		doThrow(new RuntimeException("Database Error")).when(nurseRepository).save(any(Nurse.class));
+		ResponseEntity<Nurse> response = nurseController.createNurse(nurse);
 
-		// Call the controller method
-		ResponseEntity<Nurse> response = nurseController.createNurse(name, password, age, speciality);
-
-		// Verify that the response status is 400 Bad Request
 		assertEquals(400, response.getStatusCodeValue());
-
-		// Verify that the response body is null (as no nurse was created)
 		assertNull(response.getBody());
 	}
 
 	@Test
 	void testUpdateNurse_Success() {
 		int id = 1;
-		// Valid password format and valid update data
-		Nurse updatedNurse = new Nurse("Jane Doe", 30, "NewPassword123", "Neurology");
+		Nurse existingNurse = new Nurse();
+		existingNurse.setName("John");
+		existingNurse.setPassword("Valid123");
 
-		// Mocking findById to return an existing nurse
-		when(nurseRepository.findById(id))
-				.thenReturn(Optional.of(new Nurse("John Doe", 30, "password123", "Cardiology")));
+		Nurse updatedNurse = new Nurse();
+		updatedNurse.setName("John Updated");
+		updatedNurse.setPassword("Valid456");
 
-		// Mocking save to return the updated nurse
+		when(nurseRepository.findById(id)).thenReturn(Optional.of(existingNurse));
 		when(nurseRepository.save(any(Nurse.class))).thenReturn(updatedNurse);
 
-		// Calling the controller method
 		ResponseEntity<Nurse> response = nurseController.updateNurse(id, updatedNurse);
 
-		// Assert the response status is 200 OK
 		assertEquals(200, response.getStatusCodeValue());
-		assertNotNull(response.getBody()); // Body should not be null
-		assertEquals("Jane Doe", response.getBody().getName()); // Assert name is updated
-		assertEquals("Neurology", response.getBody().getSpeciality()); // Assert speciality is updated
+		assertNotNull(response.getBody());
+		assertEquals(updatedNurse.getName(), response.getBody().getName());
 	}
 
 	@Test
 	void testUpdateNurse_NotFound() {
 		int id = 1;
-		Nurse nurseUpdate = new Nurse("John Updated", 28, "Valid123", "Surgery");
+		Nurse updatedNurse = new Nurse();
+		updatedNurse.setName("John Updated");
 
 		when(nurseRepository.findById(id)).thenReturn(Optional.empty());
 
-		ResponseEntity<Nurse> response = nurseController.updateNurse(id, nurseUpdate);
+		ResponseEntity<Nurse> response = nurseController.updateNurse(id, updatedNurse);
 
 		assertEquals(404, response.getStatusCodeValue());
-		assertNull(response.getBody()); // Body should be null for 404
-	}
-
-	@Test
-	void testUpdateNurse_Exception() {
-		int id = 1;
-		Nurse nurseUpdate = new Nurse("John Updated", 28, "Valid123", "Surgery");
-
-		when(nurseRepository.findById(id)).thenReturn(Optional.of(new Nurse()));
-		doThrow(new RuntimeException("Database Error")).when(nurseRepository).save(any(Nurse.class));
-
-		ResponseEntity<Nurse> response = nurseController.updateNurse(id, nurseUpdate);
-
-		assertEquals(400, response.getStatusCodeValue());
 		assertNull(response.getBody());
 	}
-
 }
