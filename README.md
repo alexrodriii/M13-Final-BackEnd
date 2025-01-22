@@ -65,10 +65,13 @@ This project is a **Java Spring Boot** application designed to manage a hospital
 public class Nurse {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer idNurse;
+	private Integer id;
+
 	private String name;
+	private String surname;
+	private String age;
+	private String email;
 	private String password;
-	private int age;
 	private String speciality;
 }
 ```
