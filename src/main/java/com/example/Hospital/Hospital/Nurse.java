@@ -1,9 +1,6 @@
 package com.example.Hospital.Hospital;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Nurse {
@@ -18,6 +15,10 @@ public class Nurse {
 	private String password;
 	private String speciality;
 
+	@Lob
+	@Column(columnDefinition = "LONGBLOB", nullable = true)
+	private byte[] photo;
+
 	public Nurse(String name, String surname, String age, String email, String password, String speciality) {
 		super();
 		this.name = name;
@@ -26,6 +27,14 @@ public class Nurse {
 		this.email = email;
 		this.password = password;
 		this.speciality = speciality;
+	}
+
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
 	}
 
 	public String getSurname() {
