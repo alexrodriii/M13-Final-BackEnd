@@ -9,8 +9,10 @@ import java.util.regex.Pattern;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/nurse")
@@ -158,6 +160,39 @@ public class NurseController {
 		} catch (Exception e) {
 			// Also return 400 if data saving fails
 			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@PostMapping("/photo/{id}")
+	public ResponseEntity<Boolean> uploadPhoto(@PathVariable("id") int id, @RequestParam("file") MultipartFile file) {
+		Optional<Nurse> nurseOptional = nurseRepository.findById(id);
+		if (nurseOptional.isPresent()) {
+			try {
+				Nurse nurse = nurseOptional.get();
+				nurse.setPhoto(file.getBytes());
+				nurseRepository.save(nurse);
+
+				return ResponseEntity.ok(true);
+			} catch (Exception e) {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+		}
+	}
+
+	@GetMapping("/photo/{id}")
+	public ResponseEntity<byte[]> getPhoto(@PathVariable("id") int id) {
+		Optional<Nurse> nurseOptional = nurseRepository.findById(id);
+		if (nurseOptional.isPresent()) {
+			if (nurseOptional.get().getPhoto() != null) {
+				return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(nurseOptional.get().getPhoto());
+
+			} else {
+				return ResponseEntity.noContent().build();
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
 	}
 }
