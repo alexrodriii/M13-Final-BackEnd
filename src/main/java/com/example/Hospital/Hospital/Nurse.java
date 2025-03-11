@@ -1,5 +1,6 @@
 package com.example.Hospital.Hospital;
 
+import java.util.Arrays;
 import jakarta.persistence.*;
 
 @Entity
@@ -7,7 +8,7 @@ public class Nurse {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
+	private Integer nurseNumber;
 	private String name;
 	private String surname;
 	private String age;
@@ -18,15 +19,26 @@ public class Nurse {
 	@Lob
 	@Column(columnDefinition = "LONGBLOB", nullable = true)
 	private byte[] photo;
+	
+	public Nurse() {}
 
-	public Nurse(String name, String surname, String age, String email, String password, String speciality) {
+	public Nurse(String name, String surname, String age, String email, String password, String speciality, Integer nurseNumber) {
 		super();
 		this.name = name;
 		this.surname = surname;
 		this.age = age;
+		this.nurseNumber = nurseNumber;
 		this.email = email;
 		this.password = password;
 		this.speciality = speciality;
+	}
+
+	public Integer getNurseNumber() {
+		return nurseNumber;
+	}
+
+	public void setNurseNumber(Integer nurseNumber) {
+		this.nurseNumber = nurseNumber;
 	}
 
 	public byte[] getPhoto() {
@@ -55,10 +67,6 @@ public class Nurse {
 
 	public Integer getId() {
 		return id;
-	}
-
-	public Nurse() {
-
 	}
 
 	public String getName() {
@@ -95,9 +103,9 @@ public class Nurse {
 
 	@Override
 	public String toString() {
-		return "Nurse{" + "Name='" + name + '\'' + ", Age=" + age + '\'' + ", id='" + id + '\'' + ", speciality='"
-				+ speciality + '\'' + '}';
-
+		return "Nurse [id=" + id + ", nurseNumber=" + nurseNumber + ", name=" + name + ", surname=" + surname + ", age="
+				+ age + ", email=" + email + ", password=" + password + ", speciality=" + speciality + ", photo="
+				+ Arrays.toString(photo) + "]";
 	}
 
 }

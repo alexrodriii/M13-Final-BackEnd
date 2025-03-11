@@ -3,10 +3,8 @@ package com.example.Hospital.Hospital;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +25,9 @@ public class NurseController {
 	@PostMapping("/login")
 	public @ResponseBody ResponseEntity<Optional<Nurse>> login(@RequestBody Nurse nurseLogin) {
 		// @ResponseBody Get value from body request
-		Optional<Nurse> nurse = nurseRepository.findByEmailAndPasswordCaseSensitive(nurseLogin.getEmail(),
-				nurseLogin.getPassword());
-
+		/*Optional<Nurse> nurse = nurseRepository.findByEmailAndPasswordCaseSensitive(nurseLogin.getEmail(),
+				nurseLogin.getPassword());*/
+		Optional<Nurse> nurse = nurseRepository.findByNurseNumber(nurseLogin.getNurseNumber());
 		// Checks if a nurse with the given credentials exists in the database.
 		if (nurse.isPresent()) {
 			return ResponseEntity.ok(nurse);
@@ -154,6 +152,7 @@ public class NurseController {
 			nurse.setAge(nurseCreate.getAge());
 			nurse.setPassword(nurseCreate.getPassword());
 			nurse.setSpeciality(nurseCreate.getSpeciality());
+			nurse.setNurseNumber(nurseCreate.getNurseNumber());
 			// Save the data of the new nurse into database
 			Nurse createdNurse = nurseRepository.save(nurse);
 			return ResponseEntity.status(HttpStatus.CREATED).body(createdNurse);
