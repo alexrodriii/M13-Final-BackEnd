@@ -17,6 +17,8 @@ import org.springframework.http.MediaType;
 public class NurseController {
 	@Autowired
 	private NurseRepository nurseRepository;
+	@Autowired
+	private RoomRepository roomRepository;
 
 	public NurseController() {
 		super();
@@ -36,7 +38,7 @@ public class NurseController {
 
 	}
 
-	@GetMapping
+	@GetMapping("/allNurse")
 	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
 
 		return ResponseEntity.ok((nurseRepository.findAll()));
@@ -135,7 +137,15 @@ public class NurseController {
 		}
 
 	}
+	
+	@GetMapping("/allRoom")
+	public @ResponseBody ResponseEntity<Iterable<Room>> showRooms() {
+		
+		return ResponseEntity.ok((roomRepository.findAll()));
+		
+	}
 
+	
 	@PostMapping()
 	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestBody Nurse nurseCreate) {
 		// Validate password format using regex
