@@ -19,6 +19,8 @@ public class NurseController {
 	private NurseRepository nurseRepository;
 	@Autowired
 	private RoomRepository roomRepository;
+	@Autowired
+	private DiagnosisRepository diagnosisRepository;
 
 	public NurseController() {
 		super();
@@ -40,9 +42,12 @@ public class NurseController {
 
 	@GetMapping("/allNurse")
 	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
-
 		return ResponseEntity.ok((nurseRepository.findAll()));
-
+	}
+	
+	@GetMapping("/diagnosis")
+	public @ResponseBody ResponseEntity<Iterable<Diagnosis>> showDiagnosis() {
+		return ResponseEntity.ok((diagnosisRepository.findAll()));
 	}
 
 	// The method
