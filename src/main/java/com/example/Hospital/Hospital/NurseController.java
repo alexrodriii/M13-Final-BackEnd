@@ -19,6 +19,8 @@ public class NurseController {
 	private NurseRepository nurseRepository;
 	@Autowired
 	private RoomRepository roomRepository;
+	@Autowired
+	private CareRepository careRepository;
 
 	public NurseController() {
 		super();
@@ -27,8 +29,11 @@ public class NurseController {
 	@PostMapping("/login")
 	public @ResponseBody ResponseEntity<Optional<Nurse>> login(@RequestBody Nurse nurseLogin) {
 		// @ResponseBody Get value from body request
-		/*Optional<Nurse> nurse = nurseRepository.findByEmailAndPasswordCaseSensitive(nurseLogin.getEmail(),
-				nurseLogin.getPassword());*/
+		/*
+		 * Optional<Nurse> nurse =
+		 * nurseRepository.findByEmailAndPasswordCaseSensitive(nurseLogin.getEmail(),
+		 * nurseLogin.getPassword());
+		 */
 		Optional<Nurse> nurse = nurseRepository.findByNurseNumber(nurseLogin.getNurseNumber());
 		// Checks if a nurse with the given credentials exists in the database.
 		if (nurse.isPresent()) {
@@ -81,6 +86,7 @@ public class NurseController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
 		}
 	}
+
 
 	@PutMapping("/{id}")
 	public @ResponseBody ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse nurseUpdate) {
@@ -137,16 +143,15 @@ public class NurseController {
 		}
 
 	}
-	
+
 	@GetMapping("/allRoom")
 	public @ResponseBody ResponseEntity<Iterable<Room>> showRooms() {
-		
+
 		return ResponseEntity.ok((roomRepository.findAll()));
-		
+
 	}
 
-	
-	@PostMapping()
+	@PostMapping("/createNurse")
 	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestBody Nurse nurseCreate) {
 		// Validate password format using regex
 		String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{6,}$";
@@ -171,6 +176,31 @@ public class NurseController {
 			return ResponseEntity.badRequest().build();
 		}
 	}
+	
+	@PostMapping("/createCare")
+	public @ResponseBody ResponseEntity<Care> createCare(@RequestBody Care careUpdate) {
+		
+		
+		try {
+			Care care = new Care();
+			care.setId(careUpdate.getId());
+			care.setTA_Sistolica(careUpdate.getTA_Sistolica());
+			Care createdCare = careRepository.save(care);
+			return ResponseEntity.status(HttpStatus.CREATED).body(createdCare);
+			
+			
+		} catch(Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+	
+	
+	@GetMapping("/allCare")
+	public @ResponseBody ResponseEntity<Iterable<Care>> showCare() {
+		return ResponseEntity.ok((careRepository.findAll()));
+	}
+	
+
 
 	@PostMapping("/photo/{id}")
 	public ResponseEntity<Boolean> uploadPhoto(@PathVariable("id") int id, @RequestParam("file") MultipartFile file) {
