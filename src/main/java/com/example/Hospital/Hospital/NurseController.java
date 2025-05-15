@@ -63,9 +63,14 @@ public class NurseController {
 	    }
 	}
 	
-	@GetMapping("/patient")
-	public @ResponseBody ResponseEntity<Iterable<Patient>> showPatient() {
-		return ResponseEntity.ok((patientRepository.findAll()));
+	@GetMapping("/patient/{id}")
+	public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
+	    Optional<Patient> patient = patientRepository.findById(id);
+	    if (patient.isPresent()) {
+	        return ResponseEntity.ok(patient.get());
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 
 
