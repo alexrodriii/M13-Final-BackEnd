@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Diagnosis {
@@ -12,6 +14,9 @@ public class Diagnosis {
 	private Integer id;
 	private String diagnostico;
 	private String motivo;
+	@ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 	
 	public Diagnosis() {}
 	

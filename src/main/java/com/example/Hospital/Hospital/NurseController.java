@@ -1,7 +1,6 @@
 package com.example.Hospital.Hospital;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -85,9 +84,21 @@ public class NurseController {
 	    for (Register reg : registros) {
 	        pacientes.add(reg.getPatient());
 	    }
-
 	    return ResponseEntity.ok(pacientes);
 	}
+	
+	@GetMapping("/patient/{id}/diagnoses")
+	public ResponseEntity<List<Diagnosis>> getDiagnosesByPatient(@PathVariable("id") Integer patientId) {
+	    List<Register> registros = registerRepository.findByPatientId(patientId); 
+	    List<Diagnosis> diagnoses = new ArrayList<>();
+	    for (Register reg : registros) {
+	        if (reg.getDiagnosis() != null) {
+	            diagnoses.add(reg.getDiagnosis());
+	        }
+	    }
+	    return ResponseEntity.ok(diagnoses);
+	}
+
 
 
 	 
