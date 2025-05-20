@@ -1,8 +1,11 @@
 package com.example.Hospital.Hospital;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +28,8 @@ public class NurseController {
 	private PatientRepository patientRepository;
 	@Autowired
 	private CareRepository careRepository;
-
+	@Autowired
+	private RegisterRepository registerRepository;
 	
 	public NurseController() {
 		super();
@@ -73,6 +77,21 @@ public class NurseController {
 	    }
 	}
 
+	 
+	@GetMapping("/room/{id}/patients")
+	public ResponseEntity<List<Patient>> getPatientsByRoom(@PathVariable("id") String roomId) {
+	    List<Register> registros = registerRepository.findByRoomId(roomId);
+	    List<Patient> pacientes = new ArrayList<>();
+	    for (Register reg : registros) {
+	        pacientes.add(reg.getPatient());
+	    }
+
+	    return ResponseEntity.ok(pacientes);
+	}
+
+
+	 
+	
 
 	// The method
 	@GetMapping("/name/{name}")
