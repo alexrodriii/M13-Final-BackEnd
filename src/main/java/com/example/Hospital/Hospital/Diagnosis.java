@@ -1,5 +1,6 @@
 package com.example.Hospital.Hospital;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +15,19 @@ public class Diagnosis {
 	private Integer id;
 	private String diagnostico;
 	private String motivo;
+	 @Column(columnDefinition = "TEXT")
+	    private String portadorO2Tipus;
+
+	    @Column
+	    private Boolean portadorBolquer;
+
+	    @Column
+	    private Integer numeroCanvisBolquer;
+
+	    @Column(columnDefinition = "TEXT")
+	    private String estatPell;
+
+
 	@ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
