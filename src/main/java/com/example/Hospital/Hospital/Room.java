@@ -1,5 +1,7 @@
 package com.example.Hospital.Hospital;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 
@@ -13,6 +15,19 @@ public class Room {
 	@Column(name="Hab_Obs")
 	private String observations;
 	
+	@Transient
+	private List<Patient> patients;
+	
+	public List<Patient> getPatients() {
+		return patients;
+	}
+
+
+	public void setPatients(List<Patient> patients) {
+		this.patients = patients;
+	}
+
+
 	public Room() {}
 	
 	
@@ -21,8 +36,6 @@ public class Room {
 		this.id = id;
 	}
 
-	
-	
 	public String getId() {
 		return id;
 	}
