@@ -214,11 +214,22 @@ public class NurseController {
 	}
 
 	@GetMapping("/allRoom")
-	public @ResponseBody ResponseEntity<Iterable<Room>> showRooms() {
-
-		return ResponseEntity.ok((roomRepository.findAll()));
+	public ResponseEntity<List<Room>> showRoomsWithPatients() {
+	    List<Room> rooms = (List<Room>) roomRepository.findAll();
+	    for (Room room : rooms) {
+	        List<Register> registers = registerRepository.findByRoomId(room.getId());
+	        List<Patient> patients = new ArrayList<>();
+	        for (Register reg : registers) {
+	            if (reg.getPatient() != null) {
+	                patients.add(reg.getPatient());
+	            }
+	        }
+	        room.setPatients(patients); // Set the transient field
+	    }
+	    return ResponseEntity.ok(rooms);
 
 	}
+	 
 
 	@PostMapping("/createNurse")
 	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestBody Nurse nurseCreate) {
