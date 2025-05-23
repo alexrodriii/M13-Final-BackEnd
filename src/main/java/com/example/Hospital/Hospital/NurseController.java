@@ -129,6 +129,21 @@ public class NurseController {
 		}
 	}
 
+	   @GetMapping("care/{id}")
+		public ResponseEntity<List<Care>> getCareByPatient(@PathVariable("id") int patientId) {
+		   List<Register> registros = registerRepository.findByPatientId(patientId); 
+		    List<Care> care = new ArrayList<>();
+		    for (Register reg : registros) {
+		        if (reg.getCare() != null) {
+		            care.add(reg.getCare());
+		        }
+		    }
+		    return ResponseEntity.ok(care);
+	   }
+
+
+	   
+	   
 	@DeleteMapping("/{id}")
 	public @ResponseBody ResponseEntity<Boolean> deleteNurseById(@PathVariable("id") int id) {
 		// Check if the id of a nurse exist
