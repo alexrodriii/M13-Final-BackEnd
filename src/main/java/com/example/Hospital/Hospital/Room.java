@@ -10,7 +10,8 @@ public class Room {
 	@Id
 	@Column(name="Hab_id")
 	private String id;
-	
+	@Column
+	private int number;
 
 	@Column(name="Hab_Obs")
 	private String observations;
@@ -35,6 +36,17 @@ public class Room {
 		super();
 		this.id = id;
 	}
+
+	
+	public int getNumber() {
+		return number;
+	}
+
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
 
 	public String getId() {
 		return id;

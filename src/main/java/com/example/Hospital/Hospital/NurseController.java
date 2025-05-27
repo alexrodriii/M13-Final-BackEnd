@@ -1,6 +1,7 @@
 package com.example.Hospital.Hospital;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/nurse")
@@ -29,7 +31,6 @@ public class NurseController {
 	private CareRepository careRepository;
 	@Autowired
 	private RegisterRepository registerRepository;
-
 	public NurseController() {
 		super();
 	}
@@ -258,22 +259,26 @@ public class NurseController {
 		}
 	}
 
-	@PostMapping("/care/{patientId}")
-	public @ResponseBody ResponseEntity<Care> createCare(@PathVariable("patientId") int patientId, @RequestBody Care careUpdate) { //
-		Optional<Patient> patientOptional = patientRepository.findById(patientId); //
-		if (patientOptional.isPresent()) { //
-			Patient patient = patientOptional.get(); //
+	@PostMapping("/care/{patientId}/{nurseId}")
+	public @ResponseBody ResponseEntity<Care> createCare(@PathVariable("patientId") int patientId,@PathVariable("nurseId") int nurseId, @RequestBody Care careUpdate) { //
+		Optional<Patient> patientOptional = patientRepository.findById(patientId); 
+		Optional<Nurse> nurseOptional =  nurseRepository.findById(nurseId);
+		if (patientOptional.isPresent() && nurseOptional.isPresent()) {
+			Nurse nurse = nurseOptional.get();
+			Patient patient = patientOptional.get(); 
 			try {
-				Care newCare = new Care(); //
-				newCare.setTA_Sistolica(careUpdate.getTA_Sistolica()); //
-				newCare.setFreq_resp(careUpdate.getFreq_resp()); //
-				newCare.setPols(careUpdate.getPols()); //
-				newCare.setTemperatura(careUpdate.getTemperatura()); //
+				Care newCare = new Care(); 
+				newCare.setTA_Sistolica(careUpdate.getTA_Sistolica()); 
+				newCare.setFreq_resp(careUpdate.getFreq_resp()); 
+				newCare.setPols(careUpdate.getPols()); 
+				newCare.setTemperatura(careUpdate.getTemperatura()); 
 				newCare.setPatient(patient); 
-				Care createdCare = careRepository.save(newCare); //
-				return ResponseEntity.status(HttpStatus.CREATED).body(createdCare); //
-			} catch (Exception e) { //
-				return ResponseEntity.badRequest().build(); //
+				newCare.setDate(new Date());
+				newCare.setNurse(nurse);
+				Care createdCare = careRepository.save(newCare); 
+				return ResponseEntity.status(HttpStatus.CREATED).body(createdCare); 
+			} catch (Exception e) { 
+				return ResponseEntity.badRequest().build(); 
 			}
 		} else { //
 			return ResponseEntity.notFound().build(); 
