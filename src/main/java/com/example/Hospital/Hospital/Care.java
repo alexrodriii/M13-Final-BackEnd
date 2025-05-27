@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Care {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Añadir esta línea
 	@Column(name="Cv_id")
 	private int id;
 	@Column
@@ -15,8 +16,18 @@ public class Care {
 	private int pols;
 	@Column
 	private int temperatura;
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+    
 	
 	
+	public Patient getPatient() {
+		return patient;
+	}
+	public void setPatient(Patient patient) {
+		this.patient = patient;
+	}
 	public int getId() {
 		return id;
 	}

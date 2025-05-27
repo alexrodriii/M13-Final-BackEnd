@@ -29,7 +29,7 @@ public class NurseController {
 	private CareRepository careRepository;
 	@Autowired
 	private RegisterRepository registerRepository;
-	
+
 	public NurseController() {
 		super();
 	}
@@ -55,54 +55,48 @@ public class NurseController {
 	public @ResponseBody ResponseEntity<Iterable<Nurse>> getAll() {
 		return ResponseEntity.ok((nurseRepository.findAll()));
 	}
-	
+
 	@GetMapping("/diagnosis/{id}")
 	public ResponseEntity<Diagnosis> getDiagnosisById(@PathVariable Integer id) {
-	    Optional<Diagnosis> diagnosis = diagnosisRepository.findById(id);
-	    if (diagnosis.isPresent()) {
-	        return ResponseEntity.ok(diagnosis.get());
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
+		Optional<Diagnosis> diagnosis = diagnosisRepository.findById(id);
+		if (diagnosis.isPresent()) {
+			return ResponseEntity.ok(diagnosis.get());
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	
+
 	@GetMapping("/patient/{id}")
 	public ResponseEntity<Patient> getPatientById(@PathVariable Integer id) {
-	    Optional<Patient> patient = patientRepository.findById(id);
-	    if (patient.isPresent()) {
-	        return ResponseEntity.ok(patient.get());
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
+		Optional<Patient> patient = patientRepository.findById(id);
+		if (patient.isPresent()) {
+			return ResponseEntity.ok(patient.get());
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
-	 
 	@GetMapping("/room/{id}/patients")
 	public ResponseEntity<List<Patient>> getPatientsByRoom(@PathVariable("id") String roomId) {
-	    List<Register> registros = registerRepository.findByRoomId(roomId);
-	    List<Patient> pacientes = new ArrayList<>();
-	    for (Register reg : registros) {
-	        pacientes.add(reg.getPatient());
-	    }
-	    return ResponseEntity.ok(pacientes);
+		List<Register> registros = registerRepository.findByRoomId(roomId);
+		List<Patient> pacientes = new ArrayList<>();
+		for (Register reg : registros) {
+			pacientes.add(reg.getPatient());
+		}
+		return ResponseEntity.ok(pacientes);
 	}
-	
+
 	@GetMapping("/patient/{id}/diagnoses")
 	public ResponseEntity<List<Diagnosis>> getDiagnosesByPatient(@PathVariable("id") Integer patientId) {
-	    List<Register> registros = registerRepository.findByPatientId(patientId); 
-	    List<Diagnosis> diagnoses = new ArrayList<>();
-	    for (Register reg : registros) {
-	        if (reg.getDiagnosis() != null) {
-	            diagnoses.add(reg.getDiagnosis());
-	        }
-	    }
-	    return ResponseEntity.ok(diagnoses);
+		List<Register> registros = registerRepository.findByPatientId(patientId);
+		List<Diagnosis> diagnoses = new ArrayList<>();
+		for (Register reg : registros) {
+			if (reg.getDiagnosis() != null) {
+				diagnoses.add(reg.getDiagnosis());
+			}
+		}
+		return ResponseEntity.ok(diagnoses);
 	}
-
-
-
-	 
-	
 
 	// The method
 	@GetMapping("/name/{name}")
@@ -128,22 +122,31 @@ public class NurseController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
+	@GetMapping("/care/detail/{id}")
+	public @ResponseBody ResponseEntity<Optional<Care>> findCareById(@PathVariable("id") int id) {
+		Optional<Care> care = careRepository.findById(id);
+		// Check if the nurse exist
+		if (care.isPresent()) {
+			// If the nurse exists then he shows it to us
+			return ResponseEntity.ok(care);
+		} else {
+			// If the nurse doesn't exist it shows error
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-	   @GetMapping("care/{id}")
-		public ResponseEntity<List<Care>> getCareByPatient(@PathVariable("id") int patientId) {
-		   List<Register> registros = registerRepository.findByPatientId(patientId); 
-		    List<Care> care = new ArrayList<>();
-		    for (Register reg : registros) {
-		        if (reg.getCare() != null) {
-		            care.add(reg.getCare());
-		        }
-		    }
-		    return ResponseEntity.ok(care);
-	   }
+	@GetMapping("care/{id}")
+	public ResponseEntity<List<Care>> getCareByPatient(@PathVariable("id") int patientId) {
+		Optional<Patient> patient = patientRepository.findById(patientId); //
+		if (patient.isPresent()) { //
+			List<Care> cares = careRepository.findByPatient(patient.get()); //
+			return ResponseEntity.ok(cares); //
+		} else { //
+			return ResponseEntity.notFound().build(); //
+		}
+	}
 
-
-	   
-	   
 	@DeleteMapping("/{id}")
 	public @ResponseBody ResponseEntity<Boolean> deleteNurseById(@PathVariable("id") int id) {
 		// Check if the id of a nurse exist
@@ -155,7 +158,6 @@ public class NurseController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
 		}
 	}
-
 
 	@PutMapping("/{id}")
 	public @ResponseBody ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse nurseUpdate) {
@@ -215,21 +217,20 @@ public class NurseController {
 
 	@GetMapping("/allRoom")
 	public ResponseEntity<List<Room>> showRoomsWithPatients() {
-	    List<Room> rooms = (List<Room>) roomRepository.findAll();
-	    for (Room room : rooms) {
-	        List<Register> registers = registerRepository.findByRoomId(room.getId());
-	        List<Patient> patients = new ArrayList<>();
-	        for (Register reg : registers) {
-	            if (reg.getPatient() != null) {
-	                patients.add(reg.getPatient());
-	            }
-	        }
-	        room.setPatients(patients); // Set the transient field
-	    }
-	    return ResponseEntity.ok(rooms);
+		List<Room> rooms = (List<Room>) roomRepository.findAll();
+		for (Room room : rooms) {
+			List<Register> registers = registerRepository.findByRoomId(room.getId());
+			List<Patient> patients = new ArrayList<>();
+			for (Register reg : registers) {
+				if (reg.getPatient() != null) {
+					patients.add(reg.getPatient());
+				}
+			}
+			room.setPatients(patients); // Set the transient field
+		}
+		return ResponseEntity.ok(rooms);
 
 	}
-	 
 
 	@PostMapping("/createNurse")
 	public @ResponseBody ResponseEntity<Nurse> createNurse(@RequestBody Nurse nurseCreate) {
@@ -256,31 +257,33 @@ public class NurseController {
 			return ResponseEntity.badRequest().build();
 		}
 	}
-	
-	@PostMapping("/createCare")
-	public @ResponseBody ResponseEntity<Care> createCare(@RequestBody Care careUpdate) {
-		
-		
-		try {
-			Care care = new Care();
-			care.setId(careUpdate.getId());
-			care.setTA_Sistolica(careUpdate.getTA_Sistolica());
-			Care createdCare = careRepository.save(care);
-			return ResponseEntity.status(HttpStatus.CREATED).body(createdCare);
-			
-			
-		} catch(Exception e) {
-			return ResponseEntity.badRequest().build();
+
+	@PostMapping("/care/{patientId}")
+	public @ResponseBody ResponseEntity<Care> createCare(@PathVariable("patientId") int patientId, @RequestBody Care careUpdate) { //
+		Optional<Patient> patientOptional = patientRepository.findById(patientId); //
+		if (patientOptional.isPresent()) { //
+			Patient patient = patientOptional.get(); //
+			try {
+				Care newCare = new Care(); //
+				newCare.setTA_Sistolica(careUpdate.getTA_Sistolica()); //
+				newCare.setFreq_resp(careUpdate.getFreq_resp()); //
+				newCare.setPols(careUpdate.getPols()); //
+				newCare.setTemperatura(careUpdate.getTemperatura()); //
+				newCare.setPatient(patient); 
+				Care createdCare = careRepository.save(newCare); //
+				return ResponseEntity.status(HttpStatus.CREATED).body(createdCare); //
+			} catch (Exception e) { //
+				return ResponseEntity.badRequest().build(); //
+			}
+		} else { //
+			return ResponseEntity.notFound().build(); 
 		}
 	}
-	
-	
+
 	@GetMapping("/allCare")
 	public @ResponseBody ResponseEntity<Iterable<Care>> showCare() {
 		return ResponseEntity.ok((careRepository.findAll()));
 	}
-	
-
 
 	@PostMapping("/photo/{id}")
 	public ResponseEntity<Boolean> uploadPhoto(@PathVariable("id") int id, @RequestParam("file") MultipartFile file) {

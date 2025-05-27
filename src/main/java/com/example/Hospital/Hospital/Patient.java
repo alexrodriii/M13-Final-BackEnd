@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity(name = "Pacientes")
 public class Patient {
@@ -14,7 +16,9 @@ public class Patient {
     @Column(name = "Patient_id")
     private Integer id;
 
-    @Column(name = "Patient_Name")
+
+
+	@Column(name = "Patient_Name")
     private String name;
 
     @Column(name = "Patient_DNI")
@@ -42,6 +46,7 @@ public class Patient {
     }
 
     // Getters y Setters
+
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
