@@ -1,8 +1,6 @@
 package com.example.Hospital.Hospital;
 
 import java.util.Date;
-
-
 import jakarta.persistence.*;
 
 @Entity
@@ -20,9 +18,10 @@ public class Care {
 	@Column(name = "fecha")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
-
+	@Column(name = "Saturacio_oxigen")
+	private int Saturacio_oxigen;
 	@Column
-	private int temperatura;
+	private Double temperatura;
 	@ManyToOne
 	@JoinColumn(name = "patient_id")
 	private Patient patient;
@@ -74,11 +73,11 @@ public class Care {
 		this.pols = pols;
 	}
 
-	public int getTemperatura() {
+	public double getTemperatura() {
 		return temperatura;
 	}
 
-	public void setTemperatura(int temperatura) {
+	public void setTemperatura(double temperatura) {
 		this.temperatura = temperatura;
 	}
 
@@ -92,6 +91,14 @@ public class Care {
 
 	public void setTA_Sistolica(int ta_Sistolica) {
 		TA_Sistolica = ta_Sistolica;
+	}
+	
+	public int getSaturacio_oxigen() {
+		return Saturacio_oxigen;
+	}
+
+	public void setSaturacio_oxigen(int saturacio_oxigen) {
+		Saturacio_oxigen = saturacio_oxigen;
 	}
 
 }
