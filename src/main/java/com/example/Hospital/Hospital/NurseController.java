@@ -271,7 +271,8 @@ public class NurseController {
 				newCare.setTA_Sistolica(careUpdate.getTA_Sistolica()); 
 				newCare.setFreq_resp(careUpdate.getFreq_resp()); 
 				newCare.setPols(careUpdate.getPols()); 
-				newCare.setTemperatura(careUpdate.getTemperatura()); 
+				newCare.setTemperatura(careUpdate.getTemperatura());
+				newCare.setSaturacio_oxigen(careUpdate.getSaturacio_oxigen());
 				newCare.setPatient(patient); 
 				newCare.setDate(new Date());
 				newCare.setNurse(nurse);
