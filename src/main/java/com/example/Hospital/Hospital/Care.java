@@ -8,11 +8,15 @@ import jakarta.persistence.*;
 @Entity
 public class Care {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // Añadir esta línea
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	@Column(name = "Cv_id")
 	private int id;
 	@Column
 	private int TA_Sistolica;
+	
+	@Column(name = "ta_distolica")
+	private Integer TA_Distolica;
+	
 	@Column
 	private int freq_resp;
 	@Column
@@ -53,6 +57,15 @@ public class Care {
 	public void setPatient(Patient patient) {
 		this.patient = patient;
 	}
+
+	public Integer getTA_Distolica() {
+	    return TA_Distolica;
+	}
+
+	public void setTA_Distolica(Integer tA_Distolica) {
+	    this.TA_Distolica = tA_Distolica;
+	}
+
 
 	public int getId() {
 		return id;
