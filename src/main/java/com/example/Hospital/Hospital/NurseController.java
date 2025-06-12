@@ -269,6 +269,7 @@ public class NurseController {
 			try {
 				Care newCare = new Care(); 
 				newCare.setTA_Sistolica(careUpdate.getTA_Sistolica()); 
+				newCare.setTA_Distolica(careUpdate.getTA_Distolica());
 				newCare.setFreq_resp(careUpdate.getFreq_resp()); 
 				newCare.setPols(careUpdate.getPols()); 
 				newCare.setTemperatura(careUpdate.getTemperatura());
